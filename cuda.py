@@ -63,10 +63,10 @@ def rgb2grey_blk(x):
     n = h * w
     x = x.flatten()
     res = torch.empty((h * w,), device=x.device)
-    threads = 256
+    threads = 4000
     blocks = (n + threads - 1) // threads
     blk_kernel(rgb2grey_blk_k, blocks, threads, x, res, n)
     return res.view(h, w)
 
-img_g_blk = rgb2grey_blk(img)
+img_g_blk = rgb2grey_blk(img.contiguous().cuda())
 show_image(img_g_blk, cmap='gray')
